@@ -10,6 +10,7 @@ There are three stages to this project:
   3. Create a CI/CD pipeline using circleci.com to automatically test the app again upon update to Github
 
 Restrictions:
+
 Concepts that are not permitted for use on this Assignment include, but are not limited to, the following:
 - enumerate(), map(), join(), zip(), pop(), sorted(), format(), extend(), isinstance(), typing(), deque()
 - List/dictionary/set comprehensions
