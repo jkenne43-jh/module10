@@ -7,10 +7,11 @@ class WMATATest(unittest.TestCase):
     def test_http_success(self):
         escalator_response = app.test_client().get('/incidents/escalators').status_code
         # assert that the response code of 'incidents/escalators returns a 200 code
+        assert escalator_response == 200
 
         elevator_response = app.test_client().get('/incidents/elevators').status_code
         # assert that the response code of 'incidents/elevators returns a 200 code
-
+        assert elevator_response == 200
 ################################################################################
 
     # ensure all returned incidents have the 4 required fields
@@ -19,9 +20,15 @@ class WMATATest(unittest.TestCase):
 
         response = app.test_client().get('/incidents/escalators')
         json_response = json.loads(response.data.decode())
-
         # for each incident in the JSON response assert that each of the required fields
         # are present in the response
+
+        has_required_fields = True # assume it does until it doesn't
+        for resp in json_response:
+            for field in required_fields:
+                if field not in resp.keys():
+                    has_required_fields == False
+        assert has_required_fields == True
 
 ################################################################################
 
@@ -31,7 +38,8 @@ class WMATATest(unittest.TestCase):
         json_response = json.loads(response.data.decode())
 
         # for each incident in the JSON response, assert that the 'UnitType' is "ESCALATOR"
-
+        for incident in json_response:
+            assert incident["UnitType"] == "ESCALATOR"
 ################################################################################
 
     # ensure all entries returned by the /elevators endpoint have a UnitType of "ELEVATOR"
@@ -40,7 +48,8 @@ class WMATATest(unittest.TestCase):
         json_response = json.loads(response.data.decode())
 
         # for each incident in the JSON response, assert that the 'UnitType' is "ELEVATOR"
-
+        for incident in json_response:
+            assert incident["UnitType"] == "ELEVATOR"
 ################################################################################
 
 if __name__ == "__main__":
