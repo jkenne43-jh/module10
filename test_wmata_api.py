@@ -7,15 +7,19 @@ class WMATATest(unittest.TestCase):
     def test_http_success(self):
         escalator_response = app.test_client().get('/incidents/escalators').status_code
         # assert that the response code of 'incidents/escalators returns a 200 code
-        assert escalator_response == 200
+
+        self.assertEqual(escalator_response,200, f"/incidents/escalator response code {escalator_response}")
+
 
         elevator_response = app.test_client().get('/incidents/elevators').status_code
         # assert that the response code of 'incidents/elevators returns a 200 code
-        assert elevator_response == 200
+        self.assertEqual(escalator_response, 200, f"/incidents/elevator response code {elevator_response}")
+
 ################################################################################
 
     # ensure all returned incidents have the 4 required fields
     def test_required_fields(self):
+
         required_fields = ["StationCode", "StationName", "UnitType", "UnitName"]
 
         response = app.test_client().get('/incidents/escalators')
@@ -23,12 +27,10 @@ class WMATATest(unittest.TestCase):
         # for each incident in the JSON response assert that each of the required fields
         # are present in the response
 
-        has_required_fields = True # assume it does until it doesn't
-        for resp in json_response:
+        for incident in json_response:
             for field in required_fields:
-                if field not in resp.keys():
-                    has_required_fields == False
-        assert has_required_fields == True
+                self.assertIn(field, incident.keys(),f"Field {field} not found in escalators response")
+
 
 ################################################################################
 
@@ -39,7 +41,7 @@ class WMATATest(unittest.TestCase):
 
         # for each incident in the JSON response, assert that the 'UnitType' is "ESCALATOR"
         for incident in json_response:
-            assert incident["UnitType"] == "ESCALATOR"
+            self.assertEqual(incident["UnitType"],"ESCALATOR",f"incident {incident} is not of UnitType ESCALATOR")
 ################################################################################
 
     # ensure all entries returned by the /elevators endpoint have a UnitType of "ELEVATOR"
@@ -49,7 +51,7 @@ class WMATATest(unittest.TestCase):
 
         # for each incident in the JSON response, assert that the 'UnitType' is "ELEVATOR"
         for incident in json_response:
-            assert incident["UnitType"] == "ELEVATOR"
+            self.assertEqual(incident["UnitType"],"ELEVATOR",f"incident {incident} is not of UnitType ELEVATOR")
 ################################################################################
 
 if __name__ == "__main__":
